@@ -178,6 +178,23 @@ syntax should be preferred as it’s clearer what the goal is.</p></aside>
 should <code>/foo/bar</code> route to <code>Foo1R</code> or <code>Foo3R</code>? And should <code>/foo/42</code> route to
 <code>Foo2R</code> or <code>Foo3R</code>? Yesod’s rule for this is simple: first route wins.</p>
 </section>
+<section id="routing-and-handlers_empty_literal_string_literal_or_literal_text_literal_as_dynamic_piece">
+<h1>Empty <code>#String</code> or <code>#Text</code> as dynamic piece</h1>
+<p>Consider the following route declaration:</p>
+<pre language="routes" linenumbering="unnumbered"><code>/hello          HelloR     GET
+/hello/#String  HelloNameR GET</code></pre>
+<p>Let’s say a user requests the path <code>/hello/</code> – which handler would respond to the request?</p>
+<p>It will be <code>HelloR</code> because Yesod’s dispatch mechanism removes trailing slashes and
+redirects to the canonical form of the URL.</p>
+<p>If users actually want to address the <code>HelloNameR</code> handler with an
+empty string as argument they need to request the path <code>/hello/-</code>
+instead. Yesod automatically converts the Minus sign to the empty string.</p>
+<p>Likewise, the resulting URL for <code>@{HelloNameR &quot;&quot;}</code> would be <code>/hello/-</code>.</p>
+<p>Also, to disambiguate a single actual <code>-</code>, Yesod prefixes that piece with another Minus sign when rendering the URL.
+Consequently, Yesod also prefixes any string consisting only of Minus signs with one single Minus sign.</p>
+<aside class="note"><p>This conversion between empty string in Haskell and <code>-</code> in the
+URL applies for <code>#String</code> and <code>#Text</code> pieces as well.</p></aside>
+</section>
 </section>
 <section id="routing-and-handlers_resource_name">
 <h1>Resource name</h1>
